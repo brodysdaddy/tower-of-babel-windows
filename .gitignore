@@ -1,0 +1,25 @@
+# Build outputs
+*.exe
+*.obj
+*.o
+*.pdb
+*.ilk
+*.exp
+*.lib
+build/
+out/
+
+# Saved high score
+tower_best.txt
+
+# Local Claude Code settings
+.claude/settings.local.json
+
+# Editors / OS
+.vscode/
+.vs/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store
