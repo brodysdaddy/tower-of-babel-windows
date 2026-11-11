@@ -67,7 +67,7 @@ Sky colors, brick materials and sounds are data tables at the top of `src/app/to
 
 ## How I built this
 
-I designed the game and its rules, and built it with Claude Code as a pair programmer. Claude helped with the parts that were new to me: sound effects and graphics and animation. I reviewed and tested each feature, on Windows and on the device.
+I designed the game and its rules, and built it with Claude Code as a pair programmer. Claude helped with the parts that were new to me: sound effects, graphics and animation. I reviewed and tested each feature, on Windows and on the device.
 
 ## On the M5StickS3
 
