@@ -17,11 +17,16 @@ class TowerApp {
 public:
     // frontName / sideName are what the hints call the buttons, e.g.
     // "SPACE" and "P" on Windows, "FRONT" and "SIDE" on the stick.
-    TowerApp(uint32_t seed, const char* frontName, const char* sideName);
+    // hasExit: the side button on the title screen asks to leave the game
+    // (the stick goes back to its game selector). Windows has no use for it.
+    TowerApp(uint32_t seed, const char* frontName, const char* sideName, bool hasExit = false);
 
     void update(float dt, bool frontPressed, bool sidePressed);
     void render(Framebuffer& fb);
     void pause();   // e.g. when the window loses focus
+    void enterTitle();                                   // fresh title screen
+    bool exitRequested() const { return exitRequested_; }
+    const TowerGame& game() const { return game_; }      // read-only, for diagnostics
 
 private:
     enum class Mode : uint8_t { Title, Playing, Paused, GameOver };
@@ -40,7 +45,7 @@ private:
     void spawnParticle(float x, float y, float vx, float vy, float life, float gravity,
                        Rgb color, uint8_t size);
     void updateEffects(float dt);
-    void play(const Note* notes, uint8_t count);
+    void play(const Tone* notes, uint8_t count);
     void playPerfect(int combo);
 
     float rand01();
@@ -78,4 +83,6 @@ private:
 
     char      frontName_[12];
     char      sideName_[12];
+    bool      hasExit_ = false;
+    bool      exitRequested_ = false;
 };

@@ -1,6 +1,6 @@
 # Tower of Babel (Windows prototype)
 
-A two-button stacking game written in portable C++. It's prototyped on Windows first and meant to run later on an **M5StickS3** handheld (ESP32-S3, 135×240 screen, two buttons), alongside my [Bible Trivia Stick](https://github.com/brodysdaddy/bible-trivia-stick) game.
+A two-button stacking game written in portable C++. It was prototyped on Windows first, then ported to an **M5StickS3** handheld (ESP32-S3, 135×240 screen, two buttons), where it runs alongside my [Bible Trivia](https://github.com/brodysdaddy/bible-trivia-stick) game in [bible-games-stick](https://github.com/brodysdaddy/bible-games-stick).
 
 A brick layer slides back and forth above the tower, and you press to drop it. Whatever hangs past the layer below is sliced off and tumbles away, so the tower gets narrower. Land a layer (almost) exactly on top for a **PERFECT**, and string perfects together to grow the tower back. Miss completely and the tower is finished.
 
@@ -65,8 +65,11 @@ The gameplay knobs are at the top of `src/core/tower_game.h`:
 
 Sky colors, brick materials and sounds are data tables at the top of `src/app/tower_app.cpp`.
 
+## On the M5StickS3
+
+This game now runs on the stick at a steady 30 fps, alongside Bible Trivia with a themed game selector. See **[bible-games-stick](https://github.com/brodysdaddy/bible-games-stick)**. That repo includes the portable code from `src/core`, `src/gfx` and `src/app`, unchanged. There the side button on the title screen goes back to the game selector; on Windows it does nothing.
+
 ## Next steps
 
-- **Port to the M5StickS3:** add a stick front end (buttons, display, speaker, flash for the high score) next to the trivia game.
-- **Game selector:** a menu on the stick to choose Trivia or Tower of Babel. Each choice would have its own background and style, with an animated transition between them.
 - **More polish:** bricks for more tiers, wind gusts at high altitude, and a "zoom out" view of the whole tower at game over.
+- **Tilt controls** on the stick, using its motion sensor.

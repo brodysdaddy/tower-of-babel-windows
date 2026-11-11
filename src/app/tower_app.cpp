@@ -15,10 +15,10 @@ constexpr float PANEL_DELAY = 0.6f;   // game over panel appears after this
 constexpr float INPUT_LOCK  = 1.0f;   // ...and accepts buttons after this
 
 // ---- Sounds (Hz, ms) ------------------------------------------------------
-const Note SND_CLICK[] = { {1800, 15} };
-const Note SND_THUD[]  = { {300, 35}, {200, 45} };
-const Note SND_MISS[]  = { {392, 150}, {370, 150}, {349, 150}, {330, 380} };
-const Note SND_BEST[]  = { {523, 90}, {659, 90}, {784, 90}, {1047, 280} };
+const Tone SND_CLICK[] = { {1800, 15} };
+const Tone SND_THUD[]  = { {300, 35}, {200, 45} };
+const Tone SND_MISS[]  = { {392, 150}, {370, 150}, {349, 150}, {330, 380} };
+const Tone SND_BEST[]  = { {523, 90}, {659, 90}, {784, 90}, {1047, 280} };
 
 // ---- Sky: colors at each altitude (scroll px), top and bottom of the screen
 const float SKY_ALT[] = { 0, 200, 480, 900 };
@@ -77,8 +77,8 @@ void ziggurat(Framebuffer& fb, int x, int baseY, int w, int steps, uint16_t c) {
 
 // ===========================================================================
 
-TowerApp::TowerApp(uint32_t seed, const char* frontName, const char* sideName)
-    : rng_(seed ? seed : 0x1234567u) {
+TowerApp::TowerApp(uint32_t seed, const char* frontName, const char* sideName, bool hasExit)
+    : rng_(seed ? seed : 0x1234567u), hasExit_(hasExit) {
     snprintf(frontName_, sizeof frontName_, "%s", frontName);
     snprintf(sideName_, sizeof sideName_, "%s", sideName);
     best_ = platformLoadBest();
@@ -105,14 +105,14 @@ float TowerApp::rand01() {
     return (rng_ >> 8) * (1.0f / 16777216.0f);
 }
 
-void TowerApp::play(const Note* notes, uint8_t count) { platformPlaySound(notes, count); }
+void TowerApp::play(const Tone* notes, uint8_t count) { platformPlaySound(notes, count); }
 
 // Each perfect in a streak chimes one semitone higher.
 void TowerApp::playPerfect(int combo) {
     int semis = combo - 1;
     if (semis > 12) semis = 12;
     float f = 784.0f * powf(2.0f, semis / 12.0f);
-    Note n[2] = { {(uint16_t)f, 60}, {(uint16_t)(f * 1.5f), 110} };
+    Tone n[2] = { {(uint16_t)f, 60}, {(uint16_t)(f * 1.5f), 110} };
     play(n, 2);
 }
 
@@ -134,6 +134,14 @@ void TowerApp::pause() {
     if (mode_ == Mode::Playing) { mode_ = Mode::Paused; modeTime_ = 0; }
 }
 
+void TowerApp::enterTitle() {
+    game_.reset();
+    mode_ = Mode::Title;
+    modeTime_ = 0;
+    exitRequested_ = false;
+    popupLife_ = 0;
+}
+
 void TowerApp::startGame() {
     game_.reset();
     mode_ = Mode::Playing;
@@ -149,6 +157,7 @@ void TowerApp::update(float dt, bool front, bool side) {
     case Mode::Title:
         game_.update(dt);   // the block slides behind the title as a demo
         if (front) { play(SND_CLICK, 1); startGame(); }
+        else if (side && hasExit_) { play(SND_CLICK, 1); exitRequested_ = true; }
         break;
     case Mode::Playing:
         if (side) { play(SND_CLICK, 1); pause(); return; }
@@ -477,6 +486,10 @@ void TowerApp::drawOverlay(Framebuffer& fb) {
         if (best_ > 0) {
             snprintf(buf, sizeof buf, "BEST %u", (unsigned)best_);
             drawCentered(fb, 136, buf, GOLD, 1);
+        }
+        if (hasExit_) {
+            snprintf(buf, sizeof buf, "%s: BACK", sideName_);
+            drawCentered(fb, 152, buf, shade(WHITE, -60), 1);
         }
         break;
     case Mode::Paused:

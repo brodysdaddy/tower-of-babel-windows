@@ -15,13 +15,13 @@ namespace {
 const int MAX_NOTES = 16;
 std::mutex              g_lock;
 std::condition_variable g_wake;
-Note g_pending[MAX_NOTES];
+Tone g_pending[MAX_NOTES];
 int  g_pendingCount = 0;
 bool g_hasPending = false;
 bool g_started = false;
 
 void worker() {
-    Note notes[MAX_NOTES];
+    Tone notes[MAX_NOTES];
     for (;;) {
         int count;
         {
@@ -43,7 +43,7 @@ void worker() {
 }
 }  // namespace
 
-void platformPlaySound(const Note* notes, uint8_t count) {
+void platformPlaySound(const Tone* notes, uint8_t count) {
     if (g_muted || count == 0) return;
     std::lock_guard<std::mutex> lk(g_lock);
     if (!g_started) {

@@ -34,7 +34,7 @@ public:
     // Convex 4-corner shape (used for tumbling pieces).
     void fillQuad(const float xs[4], const float ys[4], uint16_t c);
 
-    // Built-in 5x7 font: digits, A-Z (lowercase shown as uppercase), ! . : - / ?
+    // Built-in 5x7 font: digits, A-Z (lowercase shown as uppercase), ! . : - / ? % +
     void text(int x, int y, const char* s, uint16_t c, int scale = 1, int alpha = 255);
     static int textWidth(const char* s, int scale = 1);
 };
