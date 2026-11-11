@@ -65,6 +65,10 @@ The gameplay knobs are at the top of `src/core/tower_game.h`:
 
 Sky colors, brick materials and sounds are data tables at the top of `src/app/tower_app.cpp`.
 
+## How I built this
+
+I designed the game and its rules, and built it with Claude Code as a pair programmer. Claude helped with the parts that were new to me: sound effects and graphics and animation. I reviewed and tested each feature, on Windows and on the device.
+
 ## On the M5StickS3
 
 This game now runs on the stick at a steady 30 fps, alongside Bible Trivia with a themed game selector. See **[bible-games-stick](https://github.com/brodysdaddy/bible-games-stick)**. That repo includes the portable code from `src/core`, `src/gfx` and `src/app`, unchanged. There the side button on the title screen goes back to the game selector; on Windows it does nothing.
